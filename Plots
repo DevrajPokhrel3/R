@@ -1,0 +1,155 @@
+getwd()
+
+#plot
+x=c(11,22,33,44,55,66,77,88,99)
+plot(x)
+plot(x,xlab = "Sample",ylab = "Count",main = "Genomic Data Visualization")
+plot(x,xlab = "Sample",ylab = "Count",main = "Genomic Data Visualization",
+     col="red",pch=10)
+plot(x,xlab = "Sample",ylab = "Count",main = "Genomic Data Visualization",
+     col="red",pch=19,xlim = c(1,10),ylim = c(10,100),cex=2)
+
+#Two dataset
+x=c(11,22,33,44)
+y=c(80,60,40,20)
+ plot(x,y)
+plot(x,y,type = "l") 
+plot(x,y,type = "b") 
+
+data()
+install.packages("cars")
+library(cars)
+data(cars)
+dim(cars)
+colnames(cars)
+summary(cars)
+
+#Box plot
+boxplot(cars$speed,col = "red")
+boxplot(speed~dist,data = cars,col=c("green","blue"))
+boxplot(speed~dist,data = cars,col=c("green","blue"))
+
+#Histogram
+#plot1
+hist(cars$speed,col = "green")
+hist(cars$speed,col="green",breaks = 25)
+hist(cars$speed,col="green",breaks = 50)
+
+##barplot
+barplot(table(cars$dist),col = "blue")
+
+#Scatter plot
+with(cars,plot(speed,dist))
+
+#ggplot2 #grammer of graphics
+install.packages("ggplot2")
+library(ggplot2)
+library(dplyr)
+getwd()
+todayData=read.csv("home.csv")
+dim(todayData)
+names(todayData)
+View(todayData)
+
+#Scatterplot
+ggplot(todayData,aes(x=sqft_living,y=price))+
+  geom_point()+
+  labs(title="Price Vs Area", x="Carpet Area",y="Price (USD)")+
+  theme(axis.title.y = element_text(size=10,color="blue"),
+        axis.title.x = element_text(size=10,color="blue"),
+        axis.text.x =  element_text(size=7,color="blue"),
+        axis.text.y =  element_text(size=7,color="blue"))
+
+ggplot(todayData,aes(x=sqft_living,y=price,color=condition,))+
+  geom_point()+
+  labs(title="Price Vs Area", x="Carpet Area",y="Price (USD)")+
+  theme(axis.title.y = element_text(size=10,color="red"),
+        axis.title.x = element_text(size=10,color="red"),
+        axis.text.x =  element_text(size=7,color="black"),
+        axis.text.y =  element_text(size=7,color="black"))
+
+#geom_bar
+
+Mean=todayData%>%
+  filter(bedrooms>0)%>%
+  filter(bedrooms<20)%>%
+  group_by(bedrooms,Quality)%>%
+  summarise(Average=mean(price))
+dim(Mean)
+View(Mean)
+
+# Barplot
+ggplot(Mean,aes(x=bedrooms,y=Average))+
+  geom_bar(stat="identity")+
+  labs(title="Bedroom With Price", x="Number of Bedrooms",y="Average Price (USD)")+
+  theme(axis.title.y = element_text(size=10,color="black"),
+        axis.title.x = element_text(size=10,color="black"),
+        axis.text.x =  element_text(size=7,color="black"),
+        axis.text.y =  element_text(size=7,color="black"))
+
+#Bar plot with stat and position-stack
+ggplot(Mean,aes(x=bedrooms,y=Average,fill=Quality))+
+  geom_bar(stat="identity",position="stack")+
+  labs(title="Bedroom With Price", x="Number of Bedrooms",y="Average Price (USD)")+
+  theme(axis.title.y = element_text(size=10,color="black"),
+        axis.title.x = element_text(size=10,color="black"),
+        axis.text.x =  element_text(size=7,color="black"),
+        axis.text.y =  element_text(size=7,color="black"))
+
+#Position-fill 
+ggplot(Mean,aes(x=bedrooms,y=Average,fill=Quality))+
+  geom_bar(stat="identity",position="fill")+
+  labs(title="Bedroom With Price", x="Number of Bedrooms",y="Average Price (USD)")+
+  theme(axis.title.y = element_text(size=10,color="black"),
+        axis.title.x = element_text(size=10,color="black"),
+        axis.text.x =  element_text(size=7,color="black"),
+        axis.text.y =  element_text(size=7,color="black"))
+
+ggplot(Mean,aes(x=bedrooms,y=Average,fill=Quality))+
+  geom_bar(stat="identity",position="stack")+
+  labs(title="Bedroom With Price", x="Number of Bedrooms",y="Average Price (USD)")+
+  theme(axis.title.y = element_text(size=10,color="black"),
+        axis.title.x = element_text(size=10,color="black"),
+        axis.text.x =  element_text(size=7,color="black"),
+        axis.text.y =  element_text(size=7,color="black"))+
+  facet_wrap(~Quality)
+
+#Scatter plot for iris dataset
+# Load necessary libraries
+data("iris")
+View(iris)
+library(ggplot2) 
+
+# Create a scatter plot 
+ggplot(data = iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point() + 
+  labs(title = "Scatter Plot of Iris Dataset", x = "Sepal Length", y = "Sepal Width") 
+
+#Heatmap
+# Load necessary libraries
+library(ggplot2)
+
+# Generate random data (replace this with your actual dataset)
+set.seed(123)
+data <- matrix(rnorm(25), ncol = 5)
+head(data)
+rownames(data) <- c("Gene1", "Gene2", "Gene3", "Gene4", "Gene5")
+colnames(data) <- c("Sample1", "Sample2", "Sample3", "Sample4", "Sample5")
+data
+
+# Heatmap with manual colors
+my_colors <- colorRampPalette(c("cyan", "darkgreen"))
+heatmap(data, col = my_colors(100))
+
+#with ggplot2
+ggplot(data = as.data.frame(as.table(data)), 
+       aes(x = Var2, y = Var1, fill = Freq)) +
+  geom_tile() +
+    labs(title = "Heatmap Demo",x = "Samples",y = "Genes",fill = "Expression Level") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+
+
